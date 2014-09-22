@@ -2,7 +2,7 @@
 var mode = 'development';
 var conf = {
   'development': {
-    version: 0.1,
+    version: 0.2,
     server: {
       port:3000
     },
@@ -14,7 +14,8 @@ var conf = {
       login:'root',
       password: '',
       database: 'logicgame'    
-    }
+    },
+    path: ''
   },
   
   'v6': {

@@ -55,10 +55,16 @@ var control = {
 			data['position']['speed'] = 50;
 			data['position']['datetime'] =  + (new Date());
 
+			data['character'] = {};
+			data['character']['health'] = [100, 100]; // [в данный момент/максимальное]
+			data['character']['mana'] = [100, 100]; // [в данный момент/максимальное]
+
 			result[session.userId] = {
 				x : data['position']['x'],
 				y : data['position']['y'],
-				speed : data['position']['y']
+				speed : data['position']['y'],
+				health : data['character']['health'],
+				mana : data['character']['mana']
 			}
 
 		}
@@ -88,7 +94,7 @@ var control = {
 		 * time - разница времени между прошлым и нынешним событиями
 		 * x - новая координата x (старая координата + проекция)
 		 * y - новая координата y (старая координата + проекция)
-		 // * projection - проекция по x и y, объект {x:0, y:0}
+		// * projection - проекция по x и y, объект {x:0, y:0}
 		 * distance - пройденное расстояние
 		 ****/
 		var options = {};

@@ -1,0 +1,83 @@
+body {
+    background: #333;
+    margin: 0;
+    padding: 0;
+}
+canvas {
+    background: #000;
+    margin: 0 auto;
+    display: none;
+    z-index: 100;
+}
+#startBox {
+    top:50%;
+    left:50%;
+    margin-left:-100px;
+    width: 200px;
+    height: 100px;
+    margin-top:-100px;
+    position: absolute;
+}
+#username {
+    width: 100%;
+    padding: 5px 0;
+}
+.button {
+    border:1px solid #555;
+    padding: 5px;
+    text-align: center;
+    color: #ccc;
+    margin-top:20px;
+    background: #111;
+    cursor: pointer;
+}
+.button:hover {
+    background: #444;
+}
+.room {
+    position: absolute;
+    display: none;
+    z-index: 110;
+}
+.room table {
+    color:#fff;
+    background: #333333;
+    border-spacing:0;
+}
+.room table tr:nth-child(2n) {
+    background: #222;
+}
+.room table td {
+    padding: 5px 10px;
+}
+.room tbody tr:hover {
+    background: #444;
+    cursor: pointer;
+}
+.room thead tr td {
+    border-bottom:1px solid #cfffc1;
+}
+
+.btn-right {
+    float: right;
+}
+.btn-left {
+    float: left;
+}
+.room_btn {
+    border: 1px solid #ccc;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+.room_btn:hover {
+    background: #333;
+    cursor: pointer;
+}
+
+#player_list {
+    right:20px;
+    top:20px;
+    border:1px solid #cfffc1;
+}

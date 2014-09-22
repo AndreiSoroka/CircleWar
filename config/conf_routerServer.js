@@ -11,11 +11,8 @@ var mvc = require('../config/require.js');
  **
  **/
 var server = function () {
-  // хрень
-	mvc['modules']['express'].get('/', mvc['controllers']['routerServer'].server.onIndex); //
-	mvc['modules']['express'].get('/test', mvc['controllers']['routerServer'].server.onTest); //
-	mvc['modules']['express'].get('/hello', mvc['controllers']['routerServer'].server.onHello); //
-
+	mvc['modules']['express'].get('/', mvc['controllers']['routerServer'].server.onIndex);  // главная страница
+  mvc['modules']['express'].get(/^\/(css|js|fonts)\//, mvc['controllers']['routerServer'].server.onStaticFiles); //
 	mvc['modules']['express'].get('/views/view_maps.js', mvc['controllers']['routerServer'].server.onMaps); // Список ировых карт
 }
 

@@ -6,6 +6,7 @@
  **/
 var mvc = require('./config/require.js');
 var log=require('./logs/log.js');
+mvc['confing']['settings'].path = __dirname;
 
 function init(){
   // Информация о приложении

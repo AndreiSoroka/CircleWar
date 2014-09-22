@@ -4,31 +4,23 @@
  **
  **/
 
-var fs = require('fs');
+var mvc = require('../config/require.js');
 
 var server = {
-	onIndex : function (req, res) { // я хз как на экспресе счичтать файл, потом сам перепишешь
-		fs.readFile('./public/index.html', function (err, logData) {
-			if (err)
-				throw err;
-			var text = logData.toString();
-			res.send(text);
-		});
+	onIndex : function (req, res) {
+    res.sendfile(mvc['confing']['settings'].path+'/public/index.html');
 	},
+  
 	onTest : function (req, res) {
-		res.send('<a href="/hello">Hello Test</a>');
+		res.sendfile(mvc['confing']['settings'].path+'/public/test.html');
 	},
 
-	onHello : function (req, res) {
-		res.send('<a href="/test">Hello World</a>');
-	},
 	onMaps : function (req, res) {
-		fs.readFile('./views/view_maps.js', function (err, logData) {
-			if (err)
-				throw err;
-			var text = logData.toString();
-			res.send(text);
-		});
+    res.sendfile(mvc['confing']['settings'].path+'/views/view_maps.js');
+	},
+  
+	onStaticFiles : function (req, res) {
+		res.sendfile(mvc['confing']['settings'].path+'/public'+req._parsedUrl.pathname);
 	}
 
 }

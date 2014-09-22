@@ -1,204 +1,86 @@
+<!DOCTYPE html>
 <html>
-<head>
-<title>test</title>
-<script src="http://127.0.0.1:3001/socket.io/socket.io.js"></script>
-<style>
-.player{
-position:absolute;
-left:30px;
-top:30px;
-width:5px;
-height:5px;
-}
-#p1{
-background:red;
-}
-#p2{
-background:green;
-}
-#p3{
-background:blue;
-}
-</style>
-<script>
-		var r = 5; // скорость 
-    var frame = 20;
-
-
-var test = prompt("enter:\r - player1\r - player2\ror\r - player3", 'player1'); // типо сессия
-console.log(test);
-
-var onlineGame = false; // типо онлайн игра (флаг)
-
-
-// соединение
-socket = io.connect("http://127.0.0.1:3001", {
-		transports : ["websocket"]
-	});
-function onSocketConnected() {
-	this.emit('authorization', {
-		cookie : test
-	});
-}
-
-// события
-socket.on("connect", onSocketConnected);
-socket.on('authorization', onAuthorization);
-socket.on('rooms', onRooms);
-socket.on('activities', onActivities);
-
-// авторизация
-function onAuthorization(data) {
-	console.log('data', data);
-	switch (data.response) {
-	case 1:
-		console.log('success full');
-		break;
-	case 2:
-		console.log('not found session');
-		break;
-	case 3:
-		console.log('open copy');
-		break;
-	};
-}
-
-// комнаты
-function onRooms(data) {
-	console.log(data);
-	if (data.type == 'start') {
-		onlineGame = true;
-		startGame();
-	}
-}
-
-// действия игроков
-function onActivities(data) {
-	//console.log(players, data.move);
-	if (data.type == 'move') {
-		var a = data.angle * Math.PI / 180;
-		players[data.userId].moveX = (data.angle != 90 && data.angle != 270) ? (Math.floor(Math.cos(a) * r)) : 0;
-		players[data.userId].moveY = (data.angle != 180 && data.angle != 0) ? -1 * (Math.floor(Math.sin(a) * r)) : 0;
-		if (!data.move) {
-			players[data.userId].moveX = 0;
-			players[data.userId].moveY = 0;
-		}
-	}
-}
-
-// отслеживаем нажатые клавиши
-document.onkeydown = controlKey;
-document.onkeyup = controlKey;
-var objectKeys = {
-	movementKey : { // клавиши для перемещения
-		87 : false, // W
-		65 : false, // A
-		83 : false, // S
-		68 : false, // D
-	},
-	movement : {
-		angle : 0
-	}
-
-};
-function controlKey(e) {
-	if (!onlineGame) // не отслеживаем клавиши, если игра не началась
-		return;
-
-	var down = (e.type == 'keydown') ? true : false; // нажата ли клавиша
-
-	if (objectKeys.movementKey.hasOwnProperty(e.keyCode) && objectKeys.movementKey[e.keyCode] != down) {
-		objectKeys.movementKey[e.keyCode] = down;
-		var move = direction(); // изменит objectKeys.movement.angle
-		console.log(objectKeys.movement.angle, move);
-		socket.emit('activities', {
-			type : 'move',
-			angle : objectKeys.movement.angle,
-			move : move
-		}); // готовность к игре true/false
-	}
-}
-
-// функция которая задает направление по нажатым клавишам
-function direction() {
-	var m = objectKeys.movementKey;
-	/*
-	87 W
-	65 A
-	83 S
-	68 D
-	 */
-	if (m[87]) {
-		objectKeys.movement.angle = 90; // вверх
-		if (m[65] && !m[68]) {
-			objectKeys.movement.angle = 135; // вверх влево
-		} else if (!m[65] && m[68]) {
-			objectKeys.movement.angle = 45; // вверх вправо
-		}
-	} else if (m[83]) {
-		objectKeys.movement.angle = 270; // вниз
-		if (m[65] && !m[68]) {
-			objectKeys.movement.angle = 225; // вниз влево
-		} else if (!m[65] && m[68]) {
-			objectKeys.movement.angle = 315; // вниз вправо
-		}
-	} else if (m[65]) {
-		objectKeys.movement.angle = 180; // вправо
-	} else if (m[68]) { ;
-		objectKeys.movement.angle = 0; // вниз
-	} else
-		return false; // нету движухи
-	return true; // есть движуха
-
-}
-
-/////// двигаем квадратики, хочу посмотреть как работает движение
-var players = {
-	1 : {
-		moveX : 0,
-		moveY : 0
-	},
-	2 : {
-		moveX : 0,
-		moveY : 0
-	},
-	3 : {
-		moveX : 0,
-		moveY : 0
-	}
-}
-
-function startGame() {
-
-	setInterval(function () {
-		for (var key in players) {
-			window['p' + key].style.top = parseInt(window['p' + key].style.top) + players[key].moveY;
-			window['p' + key].style.left = parseInt(window['p' + key].style.left) + players[key].moveX;
-		}
-	}, frame);
-}
-</script>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Circle Wars</title>
+    <link href="css/style.css" rel="stylesheet" media="all">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 </head>
 <body>
-  <div id='p1' class='player'></div>
-  <div id='p2' class='player'></div>
-  <div id='p3' class='player'></div>
-  
-  <script>
-  for (var key in players) {
-  	window['p' + key].style.top = 130;
-  	window['p' + key].style.left = 130;
-  }
-    </script>
-  <b>testing...</b> (press ctrl+shift+i)<br/>
-  <p style='font-family: verdana; font-size: 80%;'><b>Rooms:</b><br/>
-  socket.emit('rooms',{type:'get list'}); // список комнат<br/>
-  socket.emit('rooms',{type:'join', idRoom: 'testRoom'}); // вступить в комнату с id<br/>
-  socket.emit('rooms',{type:'leave'}); // покинуть комнату<br/>
-  socket.emit('rooms',{type:'ready', flag:true}); // готовность к игре true/false</p>
-  
-  socket.emit('activities',{type:'move', angle:0, move:false});</p>
-  
-  <div id='rooms'></div>
+    <div id="startBox">
+        <input type="text" id="username" placeholder="Ваше имя" value="player1">
+        <div class="button" id="start">go</div>
+    </div>
+    <div id="rooms" class="room">
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Dark</td>
+                    <td>Light</td>
+                    <td>Max Players</td>
+                    <td>typeRoom</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div id="room" class="room">
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Name</td>
+                    <td>Status</td>
+                    <td>Type</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div id="ready" class="room_btn btn-right">Ready</div>
+        <div id="leave" class="room_btn btn-left">Leave</div>
+    </div>
+    <div id="player_list" class="room">
+        <table>
+            <thead>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Hp</td>
+                <td>x</td>
+                <td>y</td>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <canvas height='700' width='1000' id='CanvasMain'></canvas>
+    <canvas id='canv' width=500 height=500 style='background: none;
+    opacity: 0.3;
+position: absolute;
+top: 0;
+left: 0;
+z-index: 1000;
+display: block;' ></canvas>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.0.6.js"></script>
+    <script src='http://127.0.0.1:3000/views/view_maps.js'></script>
+    <script type="application/javascript" src="js/map.js"></script>
+    <script type="application/javascript" src="js/room.js"></script>
+    <script type="application/javascript" src="js/lobby.js"></script>
+    <script type="application/javascript" src="js/player.js"></script>
+    <script type="application/javascript" src="js/keylistener.js"></script>
+    <script type="application/javascript" src="js/gameInfo.js"></script>
+    <script type="application/javascript" src="js/game.js"></script>
+    <script type="application/javascript" src="js/init.js"></script>
+    <script type="application/javascript" src="js/main.js"></script>
 </body>
 </html>
