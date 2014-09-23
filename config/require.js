@@ -5,7 +5,7 @@ var files = {
 		io : require('socket.io'),
     socket : null, // экземпляр сервера io, app.js
 		express : require('express')(),
-		math : require('Math')
+		math : require('math')
 	},
 	// настройки
 	confing : {
