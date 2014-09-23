@@ -16,7 +16,7 @@ function initialization() {
 }
 
 function connection() {
-    window.socket = io.connect("http://"+window.document.domain+":3001", {
+    window.socket = io.connect("http://"+window.document.domain+":80", {
         transports : ["websocket"]
     });
 

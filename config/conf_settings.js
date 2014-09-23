@@ -1,5 +1,5 @@
 'use strict';
-var mode = 'development';
+var mode = 'openshift';
 var conf = {
   'development': {
     version: 0.2,
@@ -9,29 +9,18 @@ var conf = {
     socket: {
       port:3001
     },
-    db: {
-      ip:'127.0.0.1',
-      login:'root',
-      password: '',
-      database: 'logicgame'    
-    },
     path: ''
   },
   
-  'v6': {
-    version: 0.1,
+  'openshift': {
+    version: 0.2,
     server: {
-      port:3000
+      port:80
     },
     socket: {
-      port:3001
+      port:8080
     },
-    db: {
-      ip:'192.168.245.231',
-      login:'root',
-      password: '',
-      database: 'logicgame'    
-    }
+    path: ''
   }
 }
 exports.conf = conf[mode];
